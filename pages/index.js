@@ -8,7 +8,7 @@ const Index = () => {
   const [cards, setCards] = useState()
 
   const fetchCards = async () => {
-    const cards = await ReportService.getListCards(['Sprint'])
+    const cards = await ReportService.getListCards(['Sprint', 'Aguardando Aprovação', 'Feito'])
     const grouped = await ReportService.groupCardsByDate(cards)
 
     setCards(grouped)

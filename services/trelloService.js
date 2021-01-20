@@ -16,8 +16,9 @@ const getBoardLists = id => (
   API.get(`/boards/${id}/lists`)
 )
 
-const getListCards = id => (
-  API.get(`/lists/${id}/cards`)
-)
+const getListCards = async list => {
+  const { data } = await API.get(`/lists/${list.id}/cards`)
+  return data.map(card => ({ ...card, listName: list.name }))
+}
 
 export default { getBoards, getBoardLists, getListCards }
