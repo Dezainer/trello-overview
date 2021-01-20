@@ -5,6 +5,9 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import theme from 'styles/theme'
 import 'styles/app.css'
 
+import moment from 'moment'
+moment.locale('pt')
+
 const MyApp = props => {
   const { Component, pageProps } = props
 
