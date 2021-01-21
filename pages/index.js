@@ -5,10 +5,11 @@ import CardTable from 'components/cardTable'
 import ReportService from 'services/reportService'
 
 const Index = () => {
+  const lists = ['Sprint', 'Fazendo', 'Aguardando Aprovação', 'Feito']
   const [cards, setCards] = useState()
 
   const fetchCards = async () => {
-    const cards = await ReportService.getListCards(['Sprint'])
+    const cards = await ReportService.getListCards(lists)
     const grouped = await ReportService.groupCardsByDate(cards)
 
     setCards(grouped)

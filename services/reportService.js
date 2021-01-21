@@ -1,4 +1,5 @@
 import moment from 'moment'
+import { red, yellow, green, blue } from '@material-ui/core/colors'
 
 import TrelloService from 'services/trelloService'
 
@@ -15,11 +16,11 @@ const getListCards = async listNames => {
     .filter(list => listNames.includes(list.name))
 
   const listCards = await Promise.all(lists.map(list => (
-    TrelloService.getListCards(list.id)
+    TrelloService.getListCards(list)
   )))
 
   return listCards
-    .flatMap(cards => cards.data)
+    .flat()
     .map(card => {
       card.board = starredBoards.find(board => board.id === card.idBoard)
       return card
@@ -37,10 +38,50 @@ const groupCardsByDate = cards => (
       ...card,
       due: card.due && moment(card.due).format('YYYY-MM-DD')
     }))
-    .reduce((groups, card) => ({
-      ...groups,
-      [card.due]: [...(groups[card.due] || []), card]
-    }), {})
+    .reduce((groups, card) => {
+      const label = getDateLabel(card.due)
+      return { ...groups, [label]: [...(groups[label] || []), card] }
+    }, {})
 )
 
-export default { getListCards, groupCardsByDate }
+const getDateLabel = due => {
+  if (!due) {
+    return 'Sem Data'
+  }
+
+  if (moment(due).isBefore(moment().startOf('week'))) {
+    return 'Semana Passada'
+  }
+
+  if (parseInt(moment.duration(moment(due).diff(moment())).asDays()) === -1) {
+    return 'Ontem'
+  }
+
+  if (moment(due).endOf('day').isBefore(moment())) {
+    return 'Essa Semana'
+  }
+
+  return moment(due).calendar().split(' ')[0]
+}
+
+const getStatusColor = ({ listName, due }) => {
+  if (listName === 'Sprint' && due && moment(due).endOf('day').isBefore(moment)) {
+    return red[500]
+  }
+
+  if (listName === 'Fazendo') {
+    return blue[300]
+  }
+
+  if (listName === 'Aguardando Aprovação') {
+    return yellow[500]
+  }
+
+  if (listName === 'Feito') {
+    return green[500]
+  }
+
+  return 'transparent'
+}
+
+export default { getListCards, groupCardsByDate, getStatusColor }

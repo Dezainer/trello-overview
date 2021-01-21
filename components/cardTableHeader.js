@@ -12,6 +12,7 @@ const CardTableHeader = ({ loading }) => (
     <Table>
       <TableHead>
         <TableRow>
+          <TableCell style={{ width: '5%' }}/>
           <TableCell style={{ width: '20%' }}>Board</TableCell>
           <TableCell>Card</TableCell>
         </TableRow>
@@ -19,6 +20,7 @@ const CardTableHeader = ({ loading }) => (
       {loading &&
         <TableBody>
           <TableRow>
+            <TableCell />
             <TableCell colSpan={2}>
               <LinearProgress />
             </TableCell>
