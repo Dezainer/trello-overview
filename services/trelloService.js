@@ -1,11 +1,15 @@
 import axios from 'axios'
+import rateLimit from 'axios-rate-limit'
 
-const API = axios.create({
+const API = rateLimit(axios.create({
   baseURL: process.env.NEXT_PUBLIC_TRELLO_URL,
   params: {
     key: process.env.NEXT_PUBLIC_TRELLO_KEY,
     token: process.env.NEXT_PUBLIC_TRELLO_TOKEN
   }
+}), {
+  maxRequests: 100,
+  perMilliseconds: 9999
 })
 
 const getBoards = () => (

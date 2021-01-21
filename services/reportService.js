@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { red, yellow, green } from '@material-ui/core/colors'
+import { red, yellow, green, blue } from '@material-ui/core/colors'
 
 import TrelloService from 'services/trelloService'
 
@@ -45,8 +45,16 @@ const groupCardsByDate = cards => (
 )
 
 const getDateLabel = due => {
+  if (!due) {
+    return 'Sem Data'
+  }
+
   if (moment(due).isBefore(moment().startOf('week'))) {
     return 'Semana Passada'
+  }
+
+  if (parseInt(moment.duration(moment(due).diff(moment())).asDays()) === -1) {
+    return 'Ontem'
   }
 
   if (moment(due).endOf('day').isBefore(moment())) {
@@ -59,6 +67,10 @@ const getDateLabel = due => {
 const getStatusColor = ({ listName, due }) => {
   if (listName === 'Sprint' && due && moment(due).endOf('day').isBefore(moment)) {
     return red[500]
+  }
+
+  if (listName === 'Fazendo') {
+    return blue[300]
   }
 
   if (listName === 'Aguardando Aprovação') {
